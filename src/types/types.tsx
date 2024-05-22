@@ -4,17 +4,25 @@ export interface ChipProps {
   onRemove: (item: ChipItem) => void;
 }
 
+export interface CharacterItem {
+  id: number;
+  text: string;
+  image: string;
+  episodes: number;
+}
 export interface ListProps {
-  options: ListItem[];
+  options: CharacterItem[];
   open: boolean;
+  search: string;
   selectedIds: number[];
   onListItemSelect: (selectedItem: ChipItem) => void;
 }
 
 export interface ListItemProps {
-  item: ListItem;
+  item: CharacterItem;
   focusId: string;
   selected: boolean;
+  search: string;
   onSelect: (selectedItem: ChipItem) => void;
 }
 

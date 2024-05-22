@@ -1,43 +1,23 @@
 import styles from "./Autocomplete.module.scss";
 import List from "../List/List";
 import Chip from "../Chip/Chip";
-import { ChipItem, ListItem } from "../../types/types";
-import { useEffect, useRef, useState, FocusEvent, MouseEvent } from "react";
-
-let TransformAToB = (input: ListItem): ChipItem => {
-  return {
-    id: input.id,
-    text: input.text,
-  };
-};
-
-const options: ListItem[] = [
-  { id: 1, image: "https://picsum.photos/55/55", text: "Ross" },
-  { id: 2, image: "https://picsum.photos/55/55", text: "Chandler" },
-  { id: 3, image: "https://picsum.photos/55/55", text: "Rachel" },
-  { id: 4, image: "https://picsum.photos/55/55", text: "Monica" },
-  { id: 5, image: "https://picsum.photos/55/55", text: "Joey" },
-  { id: 6, image: "https://picsum.photos/55/55", text: "Phoebe" },
-  { id: 7, image: "https://picsum.photos/55/55", text: "Danny" },
-  { id: 8, image: "https://picsum.photos/55/55", text: "Richard" },
-  { id: 9, image: "https://picsum.photos/55/55", text: "David" },
-  { id: 10, image: "https://picsum.photos/55/55", text: "Laura" },
-  { id: 11, image: "https://picsum.photos/55/55", text: "Regina" },
-  { id: 12, image: "https://picsum.photos/55/55", text: "Ken" },
-  { id: 13, image: "https://picsum.photos/55/55", text: "Will" },
-  { id: 14, image: "https://picsum.photos/55/55", text: "Howard" },
-  { id: 15, image: "https://picsum.photos/55/55", text: "Carol" },
-  { id: 16, image: "https://picsum.photos/55/55", text: "Sussane" },
-  { id: 17, image: "https://picsum.photos/55/55", text: "Chip" },
-  { id: 18, image: "https://picsum.photos/55/55", text: "Zellner" },
-  { id: 19, image: "https://picsum.photos/55/55", text: "Kenny" },
-  { id: 20, image: "https://picsum.photos/55/55", text: "Tag" },
-  { id: 21, image: "https://picsum.photos/55/55", text: "Jack" },
-];
+import { ChipItem, CharacterItem } from "../../types/types";
+import {
+  useEffect,
+  useRef,
+  useState,
+  FocusEvent,
+  MouseEvent,
+  ChangeEvent,
+} from "react";
+import axios from "axios";
 
 function Autocomplete() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [characters, setCharacters] = useState<CharacterItem[]>([]);
   const [showList, setShowList] = useState<boolean>(false);
   const [selectedItems, setSelectedItems] = useState<ChipItem[]>([]);
+  const [searchVal, setSearchVal] = useState<string>("");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,6 +35,10 @@ function Autocomplete() {
     } else {
       setShowList(false);
     }
+  };
+  const onChangeIput = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!showList) setShowList(true);
+    setSearchVal(event.target?.value);
   };
 
   const onListItemSelect = (item: ChipItem) => {
@@ -76,6 +60,34 @@ function Autocomplete() {
       setSelectedItems([...selectedItems.filter((ite) => ite.id !== find?.id)]);
     }
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`https://rickandmortyapi.com/api/character/?name=${searchVal}`)
+      .then((res) => {
+        console.log("result", res.data);
+        if (res.data?.results?.length) {
+          setCharacters(
+            res.data.results.map((item: any) => {
+              let newItem: CharacterItem = {
+                id: item.id,
+                text: item.name,
+                image: item.image,
+                episodes: item.episode.length,
+              };
+              return newItem;
+            })
+          );
+        }
+      })
+      .catch((error) => {
+        setCharacters([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [searchVal]);
   useEffect(() => {
     //when the list is showing focus on input
     if (showList && inputRef.current) {
@@ -104,8 +116,28 @@ function Autocomplete() {
           ref={inputRef}
           onClick={toggleListOpen}
           onBlur={hideList}
+          onChange={onChangeIput}
         ></input>
-        <div className={`${styles.InputButtonWrapper} ${showList && styles.ListOpen}` }>
+        {isLoading && (
+          <div className={styles.Loader}>
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              height="24px"
+              width="24px"
+            >
+              <path
+                fill="currentColor"
+                d="M8 0A8 8 0 00.002 7.812C.094 4.033 2.968 1 6.5 1 10.09 1 13 4.134 13 8a1.5 1.5 0 003 0 8 8 0 00-8-8zm0 16a8 8 0 007.998-7.812C15.906 11.967 13.032 15 9.5 15 5.91 15 3 11.866 3 8a1.5 1.5 0 00-3 0 8 8 0 008 8z"
+              />
+            </svg>
+          </div>
+        )}
+        <div
+          className={`${styles.InputButtonWrapper} ${
+            showList && styles.ListOpen
+          }`}
+        >
           <button data-focus="autocomplete" onClick={toggleListOpen}>
             <svg
               viewBox="0 0 1024 1024"
@@ -121,7 +153,8 @@ function Autocomplete() {
       <List
         onListItemSelect={onListItemSelect}
         open={showList}
-        options={options}
+        options={characters}
+        search={searchVal}
         selectedIds={selectedItems.map((item) => item.id)}
       ></List>
     </div>

@@ -16,6 +16,11 @@
   border: 1px solid rgb(76, 76, 76);
   ul {
     padding: 0;
+    li.NoRecord {
+      padding-left: 10px;
+      padding-right: 10px;
+      color: gray;
+    }
   }
   &.open {
     opacity: 1;
