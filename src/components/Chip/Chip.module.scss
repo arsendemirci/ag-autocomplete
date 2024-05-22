@@ -1,0 +1,44 @@
+.Container {
+  border-radius: 10px;
+  background: #c7d9dc;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin: 3px;
+  padding: 7px 9px;
+  animation: appear 0.2s ease-in-out;
+
+  span {
+    flex: 1;
+    width: 100%;
+  }
+  button {
+    background: rgba(67, 107, 150, 0.446);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 10px;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    margin-left: 10px;
+    color: white;
+    border: 0;
+    transition: background 0.2s;
+    &:hover {
+      background: rgb(57, 85, 119);
+    }
+  }
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateX(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0px);
+  }
+}

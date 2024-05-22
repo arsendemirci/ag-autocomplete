@@ -1,17 +1,20 @@
-import { useRef } from "react";
+import { useRef, MouseEvent } from "react";
 import styles from "./ListItem.module.scss";
-type ListItemProps = {
-  item: string;
-  focusId: string;
-};
-function ListItem({ item, focusId }: ListItemProps) {
+import { ListItemProps } from "../../types/types";
+
+function ListItem({ item, focusId, selected, onSelect }: ListItemProps) {
   const chkRef = useRef<HTMLInputElement>(null);
+  const onListItemClick = (event: MouseEvent<HTMLLIElement>) => {
+    event.stopPropagation();
+    chkRef.current?.click();
+  };
+  const clWrap: string = `${styles.MainWrapper} ${selected && styles.selected}`;
   return (
     <li
-      onClick={() => chkRef.current?.click()}
+      onClick={onListItemClick}
       data-focus={focusId}
       tabIndex={0}
-      className={styles.MainWrapper}
+      className={clWrap}
     >
       <input
         onClick={(event: React.MouseEvent<HTMLInputElement>) =>
@@ -20,8 +23,11 @@ function ListItem({ item, focusId }: ListItemProps) {
         ref={chkRef}
         data-focus={focusId}
         type="checkbox"
+        checked={selected}
+        onChange={() => onSelect(item)}
       />
-      {item}
+      <img src={item.image} alt="new" />
+      <label>{item.text}</label>
     </li>
   );
 }
