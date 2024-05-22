@@ -1,0 +1,20 @@
+.ListWrapper {
+  width: 200px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgb(68 68 68 / 11%);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: scale(0.75);
+  transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+  padding: 0;
+
+  position: absolute;
+  ul {
+    padding: 0;
+  }
+  &.open {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

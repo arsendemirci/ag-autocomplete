@@ -1,5 +1,5 @@
 import styles from "./Autocomplete.module.scss";
-import ListItem from "../ListItem/ListItem";
+import List from "../List/List";
 import { useEffect, useRef, useState, FocusEvent, MouseEvent } from "react";
 const options: string[] = [
   "Ross",
@@ -27,7 +27,9 @@ const options: string[] = [
 function Autocomplete() {
   const [showList, setShowList] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const toggleListOpen = (): void => {
+  const toggleListOpen = (event: MouseEvent): void => {
+    console.log("adslfkja;dlfjk");
+    event.stopPropagation();
     setShowList((prev) => !prev);
   };
   const hideList = (event: FocusEvent<HTMLInputElement>): void => {
@@ -41,9 +43,6 @@ function Autocomplete() {
     } else {
       setShowList(false);
     }
-  };
-  const onSelectItem = (): void => {
-    inputRef.current?.focus();
   };
 
   useEffect(() => {
@@ -62,7 +61,7 @@ function Autocomplete() {
           onBlur={hideList}
         ></input>
         <div className={styles.InputButtonWrapper}>
-          <button onClick={toggleListOpen}>
+          <button data-focus="autocomplete" onClick={toggleListOpen}>
             <svg
               viewBox="0 0 1024 1024"
               fill="currentColor"
@@ -74,19 +73,7 @@ function Autocomplete() {
           </button>
         </div>
       </div>
-      {showList && (
-        <div
-          tabIndex={0}
-          data-focus="autocomplete"
-          className={styles.ListWrapper}
-        >
-          <ul>
-            {options.map((item, index) => (
-              <ListItem key={index} focusId="autocomplete" item={item} />
-            ))}
-          </ul>
-        </div>
-      )}
+      <List open={showList} options={options}></List>
     </div>
   );
 }

@@ -1,7 +1,13 @@
 .MainWrapper {
   line-height: 1.6;
+  transition: background 0.2s ease-out;
+  cursor: pointer;
+  &:hover {
+    background: rgb(123, 170, 232);
+  }
   input {
     margin-right: 8px;
     width: auto;
+    cursor: pointer;
   }
 }
