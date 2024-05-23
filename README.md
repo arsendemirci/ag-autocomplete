@@ -1,10 +1,11 @@
 ##  :star: ag-autocomplete
-
+<p align="left"><img src="./src/assets/image/autocomplete.gif" alt="drawing" width="400" /> </p>
 ag-autocomplete is a  multiselect react component, designed to be used in forms of react projects.
+
 ### :clapper: Demo
 You can check the [AG Autocomplete Demo Page](https://arsendemirci-ag-autocomplete.netlify.app)  to see the examples in action. 
 
-<p align="left"><img src="./src/assets/image/autocomplete.gif" alt="drawing" width="400" /> </p>
+
 
 ### :eyes: Overview
 
