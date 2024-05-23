@@ -1,6 +1,7 @@
 import ListItem from "../ListItem/ListItem";
 import styles from "./List.module.scss";
 import { ListProps } from "../../types/types";
+import { useRef, useEffect, useState } from "react";
 
 function List({
   options,
@@ -9,11 +10,27 @@ function List({
   search,
   onListItemSelect,
 }: ListProps) {
+  const [isOverflow, setIsOverflow] = useState<boolean>(false);
+  const ulRef = useRef<HTMLUListElement>(null);
   const lWrap: string = `${styles.ListWrapper} ${open && styles.open}`;
 
+  useEffect(() => {
+    if (!ulRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      console.log(ulRef.current?.scrollHeight);
+      if (ulRef?.current?.scrollHeight && ulRef?.current?.scrollHeight >= 400) {
+        setIsOverflow(true);
+      } else {
+        setIsOverflow(false);
+      }
+      // Do what you want to do when the size of the element changes
+    });
+    resizeObserver.observe(ulRef.current);
+    return () => resizeObserver.disconnect(); // clean up
+  }, []);
   return (
     <div tabIndex={0} data-focus="autocomplete" className={lWrap}>
-      <ul>
+      <ul ref={ulRef} className={`${isOverflow && styles.scrolling}`}>
         {!options.length && (
           <li key="norecord" className={styles.NoRecord}>
             There is no character matching your search!!

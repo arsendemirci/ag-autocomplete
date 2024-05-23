@@ -1,19 +1,19 @@
 .Container {
   border-radius: 10px;
-  background: #c7d9dc;
+  background: #009688;
   position: relative;
   display: inline-flex;
   align-items: center;
   margin: 3px;
   padding: 7px 9px;
   animation: appear 0.2s ease-in-out;
-
+  color:white;
   span {
     flex: 1;
     width: 100%;
   }
   button {
-    background: rgba(67, 107, 150, 0.446);
+    background: #FFC107;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +27,7 @@
     border: 0;
     transition: background 0.2s;
     &:hover {
-      background: rgb(57, 85, 119);
+      background: #FF9800;
     }
   }
 }
