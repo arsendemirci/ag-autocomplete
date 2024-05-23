@@ -26,7 +26,7 @@ function ListItem({
       className={clWrap}
     >
       <input
-        onClick={(event: React.MouseEvent<HTMLInputElement>) =>
+        onClick={(event: MouseEvent<HTMLInputElement>) =>
           event.stopPropagation()
         }
         ref={chkRef}

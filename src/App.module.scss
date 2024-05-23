@@ -1,7 +1,75 @@
 .App {
   height: 100vh;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   * {
     box-sizing: border-box;
+  }
+  h1 {
+    margin: 15px 0;
+    text-shadow: 1px 1px 3px #fff;
+    display: flex;
+    align-items: center;
+  }
+  h3 {
+    margin: 0;
+    text-shadow: 1px 1px 3px #fff;
+  }
+  > div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 400px;
+  }
+  .Header {
+    position: fixed;
+    width: 100%;
+    padding-left: 100px;
+    color: #353535;
+    z-index: 9;
+    top: 0;
+    .HeadWrap {
+      display: flex;
+      flex-direction: column;
+      width: 475px;
+      .HeadLine {
+        display: flex;
+        align-items: center;
+
+        a {
+          margin-left: 15px;
+          img {
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            transition: all .15s ease-out;
+          }
+          &:hover {
+            img {
+              box-shadow: 0 0 10px rgba(109, 109, 109, 0.555);
+              transform: scale(1.1);
+            }
+          }
+        }
+      }
+    }
+
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 11em;
+      z-index: -1;
+      transform: skewY(-3.5deg);
+      background: #ffd345;
+      border-bottom: 0.2em solid rgba(0, 0, 0, 0.67);
+      box-shadow: 0 5px 15px hsla(0, 0%, 50%, 0.529);
+    }
   }
 }
