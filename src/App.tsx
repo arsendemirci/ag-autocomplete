@@ -12,7 +12,10 @@ function App() {
         <div className={styles.HeadWrap}>
           <div className={styles.HeadLine}>
             <h1>AG Autocomplete</h1>
-            <a href="https://github.com/arsendemirci/ag-autocomplete" title="Go to github repo">
+            <a
+              href="https://github.com/arsendemirci/ag-autocomplete"
+              title="Go to github repo"
+            >
               <img src={githubLogo} alt="react" />
             </a>
           </div>

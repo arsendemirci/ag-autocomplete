@@ -31,7 +31,7 @@
   }
   ul {
     padding: 0;
-    border: 1px solid gray;
+    // border: 1px solid gray;
     max-width: 480px;
     border-radius: 10px;
     margin: 0;
@@ -42,6 +42,9 @@
     li.NoRecord {
       padding: 10px;
       color: gray;
+      border: 1px solid gray;
+      overflow: hidden;
+      border-radius: 10px;
     }
   }
   &.open {

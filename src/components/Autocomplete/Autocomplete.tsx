@@ -2,25 +2,61 @@ import styles from "./Autocomplete.module.scss";
 import List from "../List/List";
 import Chip from "../Chip/Chip";
 import { ChipItem, CharacterItem } from "../../types/types";
-import {
-  useEffect,
-  useRef,
-  useState,
-  FocusEvent,
-  MouseEvent,
-  ChangeEvent,
-} from "react";
+import { useQuery } from "react-query";
+import { useEffect, useRef, useState, FocusEvent, MouseEvent } from "react";
 import axios from "axios";
+import useDebounce from "../../hooks/useDebounce";
 
+// const endpoint: string = "https://rickandmortyapi.com/graphql";
+
+// const query: string = `
+//   {characters(page:1,filter:{name:$searchVal}) {
+//     results {
+//       id, name,image,episode{id}
+//     }
+//   }}
+// `;
 function Autocomplete() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [characters, setCharacters] = useState<CharacterItem[]>([]);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [characters, setCharacters] = useState<CharacterItem[]>([]);
   const [showList, setShowList] = useState<boolean>(false);
   const [selectedItems, setSelectedItems] = useState<ChipItem[]>([]);
   const [searchVal, setSearchVal] = useState<string>("");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { data, isLoading, refetch } = useQuery(
+    "launches",
+    () => {
+      return axios({
+        url: "https://rickandmortyapi.com/graphql",
+        method: "POST",
+        data: {
+          query: `
+        {characters(page:1,filter:{name:"${searchVal}"}) {
+          results {
+            id, name,image,episode{id}
+          }
+        }}
+      `,
+        },
+      }).then((response) => {
+        console.log(response);
+        return response.data.data.characters.results.map((item: any) => {
+          let newItem: CharacterItem = {
+            id: item.id,
+            text: item.name,
+            image: item.image,
+            episodes: item.episode.length,
+          };
+          return newItem;
+        });
+      });
+    },
+  );
+  // console.log("morty data", data);
+  //if (isLoading) return <div>...Loading</div>;
+  // setCharacters(data);
   const toggleListOpen = (event: MouseEvent): void => {
     event.stopPropagation();
     setShowList((prev) => !prev);
@@ -36,9 +72,10 @@ function Autocomplete() {
       setShowList(false);
     }
   };
-  const onChangeIput = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeIput = (): void => {
     if (!showList) setShowList(true);
-    setSearchVal(event.target?.value);
+    // setSearchVal(event.target?.value);
+    refetch();
   };
 
   const onListItemSelect = (item: ChipItem) => {
@@ -61,33 +98,7 @@ function Autocomplete() {
     }
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`https://rickandmortyapi.com/api/character/?name=${searchVal}`)
-      .then((res) => {
-        console.log("result", res.data);
-        if (res.data?.results?.length) {
-          setCharacters(
-            res.data.results.map((item: any) => {
-              let newItem: CharacterItem = {
-                id: item.id,
-                text: item.name,
-                image: item.image,
-                episodes: item.episode.length,
-              };
-              return newItem;
-            })
-          );
-        }
-      })
-      .catch((error) => {
-        setCharacters([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [searchVal]);
+  const debouncedOnChange = useDebounce(onChangeIput);
   useEffect(() => {
     //when the list is showing focus on input
     if (showList && inputRef.current) {
@@ -110,13 +121,16 @@ function Autocomplete() {
             focusId="autocomplete"
           />
         ))}
-
         <input
           type="text"
           ref={inputRef}
           onClick={toggleListOpen}
           onBlur={hideList}
-          onChange={onChangeIput}
+          onChange={(e) => {
+            debouncedOnChange();
+            setSearchVal(e.target.value);
+          }}
+          value={searchVal}
         ></input>
         {isLoading && (
           <div className={styles.Loader}>
@@ -153,7 +167,7 @@ function Autocomplete() {
       <List
         onListItemSelect={onListItemSelect}
         open={showList}
-        options={characters}
+        options={data || []}
         search={searchVal}
         selectedIds={selectedItems.map((item) => item.id)}
       ></List>
