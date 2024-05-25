@@ -7,7 +7,17 @@
   align-items: center;
   gap: 10px;
   padding: 8px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.514);
+  border: 1px solid gray;
+  border-bottom: none;
+  &:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  &:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom: 1px solid gray;
+  }
   * {
     cursor: pointer;
   }

@@ -10,14 +10,13 @@ import {
   MouseEvent,
   ChangeEvent,
 } from "react";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 function Autocomplete() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [characters, setCharacters] = useState<CharacterItem[]>([]);
+  const [searchVal, setSearchVal] = useState<string>("");
   const [showList, setShowList] = useState<boolean>(false);
   const [selectedItems, setSelectedItems] = useState<ChipItem[]>([]);
-  const [searchVal, setSearchVal] = useState<string>("");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,40 +59,32 @@ function Autocomplete() {
       setSelectedItems([...selectedItems.filter((ite) => ite.id !== find?.id)]);
     }
   };
-
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`https://rickandmortyapi.com/api/character/?name=${searchVal}`)
-      .then((res) => {
-        console.log("result", res.data);
-        if (res.data?.results?.length) {
-          setCharacters(
-            res.data.results.map((item: any) => {
-              let newItem: CharacterItem = {
-                id: item.id,
-                text: item.name,
-                image: item.image,
-                episodes: item.episode.length,
-              };
-              return newItem;
-            })
-          );
-        }
-      })
-      .catch((error) => {
-        setCharacters([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [searchVal]);
   useEffect(() => {
     //when the list is showing focus on input
     if (showList && inputRef.current) {
       inputRef.current.focus();
     }
   }, [showList]);
+
+  const { data, isFetching } = useQuery({
+    queryKey: [searchVal],
+    retry: false,
+    queryFn: () =>
+      axios
+        .get(`https://rickandmortyapi.com/api/character/?name=${searchVal}`)
+        .then((res) => {
+          return res.data.results.map((item: any) => {
+            let newItem: CharacterItem = {
+              id: item.id,
+              text: item.name,
+              image: item.image,
+              episodes: item.episode.length,
+            };
+            return newItem;
+          });
+        }),
+  });
+
   return (
     <div
       tabIndex={0}
@@ -118,7 +109,7 @@ function Autocomplete() {
           onBlur={hideList}
           onChange={onChangeIput}
         ></input>
-        {isLoading && (
+        {isFetching && (
           <div className={styles.Loader}>
             <svg
               viewBox="0 0 16 16"
@@ -153,7 +144,8 @@ function Autocomplete() {
       <List
         onListItemSelect={onListItemSelect}
         open={showList}
-        options={characters}
+        options={data || []}
+        isLoading={isFetching}
         search={searchVal}
         selectedIds={selectedItems.map((item) => item.id)}
       ></List>

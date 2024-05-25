@@ -13,6 +13,7 @@ export interface CharacterItem {
 export interface ListProps {
   options: CharacterItem[];
   open: boolean;
+  isLoading:boolean;
   search: string;
   selectedIds: number[];
   onListItemSelect: (selectedItem: ChipItem) => void;

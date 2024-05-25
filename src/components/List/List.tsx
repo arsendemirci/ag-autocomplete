@@ -8,6 +8,7 @@ function List({
   open,
   selectedIds,
   search,
+  isLoading,
   onListItemSelect,
 }: ListProps) {
   const [isOverflow, setIsOverflow] = useState<boolean>(false);
@@ -17,7 +18,6 @@ function List({
   useEffect(() => {
     if (!ulRef.current) return;
     const resizeObserver = new ResizeObserver(() => {
-      console.log(ulRef.current?.scrollHeight);
       if (ulRef?.current?.scrollHeight && ulRef?.current?.scrollHeight >= 400) {
         setIsOverflow(true);
       } else {
@@ -31,7 +31,7 @@ function List({
   return (
     <div tabIndex={0} data-focus="autocomplete" className={lWrap}>
       <ul ref={ulRef} className={`${isOverflow && styles.scrolling}`}>
-        {!options.length && (
+        {!isLoading && !options.length && (
           <li key="norecord" className={styles.NoRecord}>
             There is no character matching your search!!
           </li>
