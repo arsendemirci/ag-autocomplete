@@ -1,4 +1,8 @@
-<h1>:star: ag-autocomplete <img src="./src/assets/image/ts-logo.png" alt="drawing" width="30"  height="34" align="right" /><img src="./src/assets/image/react-logo.png" alt="drawing" width="34"  height="34" align="right" /><img src="./src/assets/image/sass-logo.png" alt="drawing" width="34"  height="34" align="right" /></h1>
+<h1>:star: ag-autocomplete</h1>
+
+![Static Badge](https://img.shields.io/badge/TS-TypeScript-%233178C6?style=plastic&logo=TypeScript) ![Static Badge](https://img.shields.io/badge/React-18.2.0-blue?style=plastic&logo=React) ![Static Badge](https://img.shields.io/badge/React%20Query-5.37.1-%23FF4154?style=plastic&logo=React%20Query)
+![Static Badge](https://img.shields.io/badge/GraphQL-16.8.1-%23E10098?style=plastic&logo=GraphQL)
+![Static Badge](https://img.shields.io/badge/Sass-1.69.5-pink?style=plastic&logo=Sass)
 
 ag-autocomplete is a  multiselect react component, designed to be used in forms of react projects.
 
